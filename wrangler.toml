@@ -1,0 +1,17 @@
+name = "aii"
+main = "src/index.js"
+compatibility_date = "2026-11-06"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[ai]
+binding = "AI"
+
+[vars]
+AI_MODEL = "@cf/qwen/qwen3.8-27b"
+APP_NAME = "QWEN NEXUS"
+MAX_TEXT_CHARS = "24000"
