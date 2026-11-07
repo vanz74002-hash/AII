@@ -1,5 +1,5 @@
 /* ============================================================
-   QWEN NEXUS — APP CONTROLLER v4.1
+   QWEN NEXUS — APP CONTROLLER v4.2
    Upgraded by Kairo | Cybercrime Game Specialist
    ============================================================ */
 
@@ -25,7 +25,7 @@ function toast(message, type = "info") {
     if (!el) return;
     
     el.textContent = message;
-    el.className = `toast show ${type}`; // Reset class
+    el.className = `toast show ${type}`;
     
     clearTimeout(toast.timer);
     toast.timer = setTimeout(() => {
@@ -93,13 +93,10 @@ function enterApp() {
     if (loginScreen) loginScreen.classList.add("hidden");
     if (appShell) appShell.classList.remove("hidden");
     
-    // Focus input
     const input = $("#messageInput");
     if (input) input.focus();
     
-    // Init System Monitor Data
     initSystemMonitor();
-    
     toast("Welcome to QWEN NEXUS. Session Ephemeral.");
 }
 
@@ -146,7 +143,6 @@ function appendMessage(message) {
         </div>
     `;
 
-    // Copy Handler
     const copyBtn = item.querySelector("[data-copy]");
     if (copyBtn) {
         copyBtn.addEventListener("click", async () => {
@@ -163,7 +159,6 @@ function appendMessage(message) {
     list.classList.add("visible");
     if (welcome) welcome.classList.add("hidden");
     
-    // Auto scroll
     list.scrollTop = list.scrollHeight;
 }
 
@@ -174,11 +169,9 @@ async function sendMessage(content) {
     const sendBtn = $("#sendBtn");
     if (sendBtn) sendBtn.disabled = true;
 
-    // Add User Message
     state.messages.push({ role: "user", content });
     appendMessage({ role: "user", content });
 
-    // Loading Indicator
     const list = $("#messageList");
     const loading = document.createElement("article");
     loading.className = "message assistant thinking";
@@ -195,21 +188,18 @@ async function sendMessage(content) {
     if (list) list.appendChild(loading);
 
     try {
-        // Call API
         const result = await api("/api/chat", {
             method: "POST",
             body: JSON.stringify({ 
-                messages: state.messages.slice(-16) // Keep context window small for speed
+                messages: state.messages.slice(-16)
             })
         });
 
-        // Remove Loading
         const loadingMsg = $("#thinking-msg");
         if (loadingMsg) loadingMsg.remove();
 
         const answer = result.response || "Model returned empty response.";
         
-        // Add Assistant Message
         state.messages.push({ role: "assistant", content: answer });
         appendMessage({ role: "assistant", content: answer });
 
@@ -233,14 +223,11 @@ async function sendMessage(content) {
 // --- VIEW SWITCHING ---
 
 function switchView(viewName) {
-    // Hide all views
     $$(".module-view").forEach(el => el.classList.remove("active"));
     
-    // Show target view
     const target = $(`#${viewName}View`);
     if (target) target.classList.add("active");
 
-    // Update Nav Active State
     $$(".nav-item").forEach(btn => {
         if (btn.dataset.view === viewName) {
             btn.classList.add("active");
@@ -249,7 +236,6 @@ function switchView(viewName) {
         }
     });
 
-    // Update Topbar Title
     const titleMap = {
         "chat": "NEXUS CORE",
         "files": "LOCAL FILE LAB",
@@ -276,6 +262,24 @@ function initSystemMonitor() {
         const clock = $("#clock");
         if (clock) clock.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
     }, 1000);
+
+    // Connection Status
+    const connEl = $("#connectionStatus");
+    if (connEl) {
+        connEl.textContent = navigator.onLine ? "ONLINE" : "OFFLINE";
+    }
+
+    // Language
+    const langEl = $("#deviceLanguage");
+    if (langEl) {
+        langEl.textContent = navigator.language || "ID";
+    }
+
+    // Screen Resolution
+    const screenEl = $("#deviceScreen");
+    if (screenEl) {
+        screenEl.textContent = `${window.innerWidth}×${window.innerHeight}`;
+    }
 
     // Hardware Info
     const memEl = $("#deviceMemory");
@@ -304,9 +308,8 @@ async function handleFiles(fileList, isVault = false) {
 
     const tray = isVault ? $("#vaultList") : $("#attachmentTray");
     
-    // Visual Feedback
     if (isVault && tray) {
-        tray.innerHTML = ""; // Clear previous for vault demo
+        tray.innerHTML = "";
     }
 
     let totalSize = 0;
@@ -318,7 +321,6 @@ async function handleFiles(fileList, isVault = false) {
             continue;
         }
 
-        // Add to UI List
         if (isVault && tray) {
             const card = document.createElement("div");
             card.className = "file-card";
@@ -335,11 +337,9 @@ async function handleFiles(fileList, isVault = false) {
             tray.appendChild(card);
         }
 
-        // Process Content for AI
         if (readableFile(file) && file.size <= 250000) {
             try {
                 const content = await file.text();
-                // Limit context injection size
                 const remain = Math.max(0, 18000 - totalSize);
                 if (remain > 0) {
                     const part = content.slice(0, remain);
@@ -358,7 +358,7 @@ async function handleFiles(fileList, isVault = false) {
         const input = $("#messageInput");
         if (input) {
             input.value = `Analyze the following files:\n\n${snippets.join("\n\n")}\n\n`;
-            input.dispatchEvent(new Event("input")); // Trigger auto-resize
+            input.dispatchEvent(new Event("input"));
             toast("Files loaded into context.", "success");
         }
     } else if (isVault) {
@@ -369,11 +369,9 @@ async function handleFiles(fileList, isVault = false) {
 // --- EVENT LISTENERS ---
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Enter App
     const enterBtn = $("#enterAppBtn");
     if (enterBtn) enterBtn.addEventListener("click", enterApp);
 
-    // New Chat
     const newChatBtn = $("#newChatBtn");
     if (newChatBtn) newChatBtn.addEventListener("click", () => {
         clearMessages();
@@ -383,7 +381,6 @@ document.addEventListener("DOMContentLoaded", () => {
         closeSidebar();
     });
 
-    // Sidebar Toggle
     const menuBtn = $("#menuBtn");
     const closeSidebarBtn = $("#closeSidebar");
     const overlay = $(".sidebar-overlay");
@@ -397,16 +394,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (closeSidebarBtn) closeSidebarBtn.addEventListener("click", closeSidebar);
     if (overlay) overlay.addEventListener("click", closeSidebar);
 
-    // Navigation
     $$(".nav-item").forEach(btn => {
         btn.addEventListener("click", () => switchView(btn.dataset.view));
     });
 
-    // Quick Prompts
     $$(".quick-module-card").forEach(card => {
         card.addEventListener("click", () => {
+            const view = card.dataset.view;
             const prompt = card.dataset.prompt;
-            if (prompt) {
+            
+            if (view) {
+                switchView(view);
+            } else if (prompt) {
                 switchView("chat");
                 const input = $("#messageInput");
                 if (input) {
@@ -417,7 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Chat Composer
     const composer = $("#composer");
     if (composer) {
         composer.addEventListener("submit", async (event) => {
@@ -433,7 +431,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Auto-resize Textarea
     const messageInput = $("#messageInput");
     if (messageInput) {
         messageInput.addEventListener("input", (event) => {
@@ -441,7 +438,6 @@ document.addEventListener("DOMContentLoaded", () => {
             event.target.style.height = `${Math.min(event.target.scrollHeight, 180)}px`;
         });
         
-        // Handle Shift+Enter for new line
         messageInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
@@ -450,9 +446,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // File Inputs
-    const fileInput = $("#fileInput"); // Chat attachment
-    const vaultInput = $("#vaultInput"); // Vault upload
+    const fileInput = $("#fileInput");
+    const vaultInput = $("#vaultInput");
 
     if (fileInput) {
         fileInput.addEventListener("change", async (event) => {
