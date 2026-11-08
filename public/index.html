@@ -2,58 +2,55 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>QWEN NEXUS — Intelligence System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-content">
-            <h1>QWEN NEXUS</h1>
-            <p>Intelligence System</p>
-            <button id="enterAppBtn" class="primary-button">
-                START SYSTEM
-                <span class="button-arrow">↗</span>
-            </button>
-        </div>
-    </div>
+    <!-- Background Effects -->
+    <div class="cyber-grid"></div>
+    <div class="cyber-scanlines"></div>
+    <div class="cyber-vignette"></div>
 
-    <!-- Main App -->
-    <div id="app" class="app-shell hidden">
+    <div class="app-shell" id="app">
         <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="brand">
-                    <div class="brand-logo"><span>N</span></div>
+                    <div class="brand-logo">
+                        <span>N</span>
+                    </div>
                     <div class="brand-text">
                         <strong>QWEN NEXUS</strong>
-                        <small>BUILD 02.00</small>
+                        <small>BUILD 03.00</small>
                     </div>
                 </div>
-                <button id="closeSidebar" class="icon-button sidebar-close">×</button>
+                <button class="icon-button sidebar-close" id="closeSidebar" aria-label="Close sidebar">✕</button>
             </div>
 
             <div class="sidebar-primary">
-                <button id="newChatBtn" class="new-chat-button">
+                <button class="new-chat-button" id="newChatBtn">
                     <span class="button-icon">＋</span>
-                    New Chat
+                    NEW CONVERSATION
                     <kbd>⌘ K</kbd>
                 </button>
             </div>
 
             <div class="sidebar-section">
                 <div class="sidebar-section-title">
-                    <span>◈</span> WORKSPACE
+                    <span>◈</span> WORKSPACE MODULES
                 </div>
                 <nav class="sidebar-navigation">
                     <button class="nav-item active" data-view="chat">
-                        <span class="nav-icon">◈</span>
+                        <span class="nav-icon">▧</span>
                         <span class="nav-label">Nexus Core</span>
                         <span class="nav-arrow">↗</span>
                     </button>
                     <button class="nav-item" data-view="files">
-                        <span class="nav-icon">▧</span>
+                        <span class="nav-icon">◈</span>
                         <span class="nav-label">Nexus Vault</span>
                         <span class="nav-arrow">↗</span>
                     </button>
@@ -65,27 +62,56 @@
                 </nav>
             </div>
 
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">
+                    <span>▣</span> QUICK ACCESS
+                </div>
+                <div class="quick-access-list">
+                    <div class="quick-access-item quick-module-card" data-view="chat" data-prompt="Analyze this code for vulnerabilities:">
+                        <div class="quick-access-dot cyan"></div>
+                        <span>Vulnerability Scan</span>
+                        <small>AI CORE</small>
+                    </div>
+                    <div class="quick-access-item quick-module-card" data-view="files" data-prompt="Summarize this document:">
+                        <div class="quick-access-dot purple"></div>
+                        <span>Document Summary</span>
+                        <small>VAULT</small>
+                    </div>
+                    <div class="quick-access-item quick-module-card" data-view="system" data-prompt="Explain my current system specs:">
+                        <div class="quick-access-dot green"></div>
+                        <span>Telemetry Check</span>
+                        <small>MONITOR</small>
+                    </div>
+                </div>
+            </div>
+
             <div class="sidebar-footer">
+                <div class="session-card">
+                    <div class="session-card-top">
+                        <span class="status-indicator"></span>
+                        LIVE SESSION
+                    </div>
+                    <strong>EPHEMERAL MODE</strong>
+                    <p>No history saved. Local processing only.</p>
+                </div>
                 <div class="sidebar-system-status">
                     <span class="status-indicator"></span>
-                    CORE SYSTEM LIVE
-                </div>
+                    SYSTEM ONLINE
+               404>
                 <div class="sidebar-version">
-                    <span>QWEN NEXUS</span>
-                    <span>BUILD 02.00</span>
+                    <span>v3.0.0-stable</span>
+                    <span>SECURE</span>
                 </div>
             </div>
         </aside>
 
-        <!-- Sidebar Overlay (Mobile) -->
-        <div class="sidebar-overlay"></div>
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
         <!-- Main Area -->
         <main class="main-area">
-            <!-- Topbar -->
             <header class="topbar">
                 <div class="topbar-left">
-                    <button id="menuBtn" class="icon-button menu-toggle">☰</button>
+                    <button class="icon-button menu-toggle" id="menuBtn" aria-label="Open menu">☰</button>
                     <div class="breadcrumb">
                         <span>QWEN NEXUS</span>
                         <span class="breadcrumb-separator">/</span>
@@ -95,28 +121,27 @@
                 <div class="topbar-right">
                     <div class="system-status-pill">
                         <span class="status-indicator"></span>
-                        ONLINE
+                        <span id="connectionStatus">CHECKING</span>
                     </div>
                     <div class="model-pill">
                         <span class="model-indicator"></span>
-                        QWEN AI
+                        QWEN-3.8-27B
                     </div>
                 </div>
             </header>
 
-            <!-- View Container -->
             <div class="view-container">
-                <!-- Chat View -->
-                <div id="chatView" class="module-view active">
+                <!-- VIEW: CHAT (NEXUS CORE) -->
+                <section id="chatView" class="module-view active">
                     <div class="module-topline">
                         <div class="module-code">
                             <span class="module-code-light"></span>
-                            NEXUS MODULE 01
+                            MODULE 01
                         </div>
                         <div class="module-category">INTELLIGENCE / CORE</div>
                     </div>
 
-                    <div class="core-hero">
+                    <div class="core-hero" id="welcome">
                         <div class="core-hero-content">
                             <div class="eyebrow">
                                 <span class="eyebrow-line"></span>
@@ -124,134 +149,106 @@
                             </div>
                             <h1>Think beyond<br><span>limitations.</span></h1>
                             <p class="hero-description">
-                                Your intelligence. Your workspace. A powerful AI interface designed for exploration, creation and analysis.
+                                Your intelligence. Your workspace. A powerful AI interface designed for exploration, creation, and advanced analysis.
                             </p>
                             <div class="hero-actions">
-                                <button class="primary-button" onclick="document.getElementById('messageInput').focus()">
+                                <button class="primary-button" id="enterAppBtn">
                                     START CONVERSATION
                                     <span class="button-arrow">↗</span>
                                 </button>
                                 <div class="hero-caption">
-                                    NO ACCOUNT REQUIRED • INSTANT ACCESS
+                                    <span>NO ACCOUNT REQUIRED</span>
+                                    <span>•</span>
+                                    <span>INSTANT ACCESS</span>
                                 </div>
                             </div>
                         </div>
                         <div class="core-visual">
                             <div class="core-glow"></div>
-                            <div class="core-emblem"><span>N</span></div>
                             <div class="core-orbit orbit-one"></div>
                             <div class="core-orbit orbit-two"></div>
                             <div class="core-orbit orbit-three"></div>
+                            <div class="core-emblem">
+                                <span>N</span>
+                            </div>
+                            <div class="core-visual-label">
+                                <span>SYS:ACTIVE</span>
+                                <span>NR:03.00</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="chat-workspace">
+                    <div class="chat-workspace" id="chatWorkspace" style="display: none;">
                         <div class="chat-header">
                             <div>
                                 <h2>Nexus <span>Conversation</span></h2>
-                                <p>Talk with your AI assistant.</p>
+                                <p>Talk with your AI assistant. Context-aware and secure.</p>
                             </div>
                             <div class="chat-header-status">
                                 <span class="status-indicator"></span>
                                 READY
                             </div>
                         </div>
-
-                        <div id="messageList" class="chat-messages">
-                            <div id="welcome" class="welcome-message">
-                                <div class="assistant-avatar">N</div>
-                                <div class="welcome-message-content">
-                                    <div class="message-author">
-                                        NEXUS AI
-                                        <span>CORE SYSTEM</span>
-                                    </div>
-                                    <div class="message-bubble">
-                                        Halo! Gua siap membantu. Kamu bisa bertanya, menganalisis kode, memahami file, atau mengeksplorasi berbagai ide.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <form id="composer" class="chat-composer">
+                        <div class="chat-messages" id="messageList"></div>
+                        <form class="chat-composer" id="composer">
                             <div class="composer-top">
                                 <div class="composer-mode">
-                                    <span class="status-indicator"></span>
-                                    NEXUS AI MODE
+                                    <span>◈</span> NEXUS AI MODE
                                 </div>
-                                <div>SHIFT + ENTER FOR NEW LINE</div>
+                                <span>SHIFT + ENTER FOR NEW LINE</span>
                             </div>
                             <div class="composer-input-area">
-                                <input type="file" id="fileInput" multiple hidden>
-                                <button type="button" class="composer-icon-button" onclick="document.getElementById('fileInput').click()">＋</button>
-                                <textarea id="messageInput" placeholder="Type your message..." rows="1"></textarea>
-                                <button type="submit" id="sendBtn" class="send-button">↑</button>
+                                <label for="fileInput" class="composer-icon-button" title="Attach file">
+                                    📎
+                                </label>
+                                <input type="file" id="fileInput" hidden multiple accept=".txt,.lua,.js,.json,.pdf,.md,.py,.html,.css">
+                                <textarea id="messageInput" placeholder="Initialize command sequence..." rows="1"></textarea>
+                                <button type="submit" class="send-button" id="sendBtn">↑</button>
                             </div>
-                            <div id="attachmentTray" class="attached-files"></div>
+                            <div class="attached-files" id="attachmentTray"></div>
                             <div class="composer-bottom">
-                                <div>AI responses may require an active cloud connection.</div>
+                                <span>AI responses may require an active cloud connection.</span>
                             </div>
                         </form>
                     </div>
+                </section>
 
-                    <div class="quick-modules">
-                        <div class="section-heading">
-                            <h2>EXPLORE <span>SYSTEM</span></h2>
-                            <div class="section-caption">AVAILABLE MODULES / 03</div>
-                        </div>
-                        <div class="quick-module-grid">
-                            <div class="quick-module-card" data-prompt="Jelaskan cara kerja AI">
-                                <div class="quick-module-icon">◈</div>
-                                <div class="quick-module-name">AI Workspace</div>
-                                <div class="quick-module-description">Conversational intelligence</div>
-                                <div class="quick-module-arrow">↗</div>
-                            </div>
-                            <div class="quick-module-card" data-view="files">
-                                <div class="quick-module-icon purple">▧</div>
-                                <div class="quick-module-name">File Intelligence</div>
-                                <div class="quick-module-description">Upload and inspect files</div>
-                                <div class="quick-module-arrow">↗</div>
-                            </div>
-                            <div class="quick-module-card" data-view="system">
-                                <div class="quick-module-icon green">⌁</div>
-                                <div class="quick-module-name">System Monitor</div>
-                                <div class="quick-module-description">Runtime information</div>
-                                <div class="quick-module-arrow">↗</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Files View -->
-                <div id="filesView" class="module-view">
+                <!-- VIEW: FILES (NEXUS VAULT) -->
+                <section id="filesView" class="module-view">
                     <div class="module-topline">
                         <div class="module-code">
                             <span class="module-code-light"></span>
-                            NEXUS MODULE 02
+                            MODULE 02
                         </div>
                         <div class="module-category">STORAGE / LOCAL FILE LAB</div>
                     </div>
-
                     <div class="module-heading">
                         <div>
-                            <h2>FILE <span>INTELLIGENCE</span></h2>
-                            <p>Nexus Vault. Analyze files locally and send supported content to the AI workspace. Nothing is stored as account history.</p>
+                            <div class="eyebrow">
+                                <span class="eyebrow-line"></span>
+                                FILE INTELLIGENCE
+                            </div>
+                            <h2>Nexus <span>Vault</span></h2>
+                            <p>Analyze files locally and send supported content to the AI workspace. Nothing is stored as account history.</p>
                         </div>
                     </div>
 
-                    <input type="file" id="vaultInput" multiple hidden>
-                    <div class="upload-zone" onclick="document.getElementById('vaultInput').click()">
+                    <label class="upload-zone" id="uploadZone">
+                        <input type="file" id="vaultInput" hidden multiple accept=".txt,.lua,.js,.json,.pdf,.md,.py,.html,.css,.mp3,.mp4">
                         <div class="upload-zone-icon">＋</div>
                         <h3>UPLOAD FILE</h3>
                         <p>Drop your files here or select files from your device.</p>
-                        <div class="upload-zone-formats">TXT / LUA / JS / JSON / PDF / MP3 / MP4 / OTHER</div>
-                    </div>
+                        <div class="upload-zone-formats">
+                            TXT / LUA / JS / JSON / PDF / MP3 / MP4 / OTHER
+                        </div>
+                    </label>
 
                     <div class="vault-library">
                         <div class="section-heading">
                             <h2>Your <span>Files</span></h2>
-                            <div class="section-caption">01 / LIBRARY</div>
+                            <div class="section-caption">01 / LIBRARY ▧</div>
                         </div>
-                        <div id="vaultList" class="vault-list">
+                        <div class="vault-list" id="vaultList">
                             <div class="vault-empty-state">
                                 <div class="vault-empty-icon">▧</div>
                                 <h3>Your vault is empty</h3>
@@ -259,46 +256,25 @@
                             </div>
                         </div>
                     </div>
+                </section>
 
-                    <div class="file-information">
-                        <div class="section-heading">
-                            <h2>File <span>Intelligence</span></h2>
-                            <div class="section-caption">02 / INFORMATION</div>
-                        </div>
-                        <div class="information-grid">
-                            <div class="information-card">
-                                <span>PROCESSING</span>
-                                <strong>LOCAL</strong>
-                                <p>Browser-based file selection</p>
-                            </div>
-                            <div class="information-card">
-                                <span>SESSION</span>
-                                <strong>TEMPORARY</strong>
-                                <p>Files are not saved as chat history</p>
-                            </div>
-                            <div class="information-card">
-                                <span>ANALYSIS</span>
-                                <strong>SUPPORTED</strong>
-                                <p>Depends on file type and size</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- System View -->
-                <div id="systemView" class="module-view">
+                <!-- VIEW: SYSTEM (MONITOR) -->
+                <section id="systemView" class="module-view">
                     <div class="module-topline">
                         <div class="module-code">
                             <span class="module-code-light"></span>
-                            NEXUS MODULE 03
+                            MODULE 03
                         </div>
                         <div class="module-category">SYSTEM / RUNTIME MONITOR</div>
                     </div>
-
                     <div class="module-heading">
                         <div>
-                            <h2>SYSTEM <span>INTELLIGENCE</span></h2>
-                            <p>System Monitor. Monitor browser session information, connection status and workspace activity.</p>
+                            <div class="eyebrow">
+                                <span class="eyebrow-line"></span>
+                                SYSTEM INTELLIGENCE
+                            </div>
+                            <h2>System <span>Monitor</span></h2>
+                            <p>Monitor browser session information, connection status and workspace activity.</p>
                         </div>
                         <div class="live-badge">
                             <span class="status-indicator"></span>
@@ -309,16 +285,16 @@
                     <div class="monitor-section">
                         <div class="section-heading">
                             <h2>Runtime <span>Overview</span></h2>
-                            <div class="section-caption">01 / OVERVIEW</div>
+                            <div class="section-caption">01 / OVERVIEW ⌁</div>
                         </div>
                         <div class="monitor-grid">
                             <div class="monitor-card">
                                 <div class="monitor-card-top">
                                     <span>CONNECTION</span>
-                                    <span class="monitor-card-icon">⌁</span>
+                                    <span class="monitor-card-icon">◈</span>
                                 </div>
-                                <strong id="connectionStatus">CHECKING</strong>
-                                <p>Network connection</p>
+                                <strong id="connectionStatusMonitor">CHECKING</strong>
+                                <p>Network connection status</p>
                             </div>
                             <div class="monitor-card">
                                 <div class="monitor-card-top">
@@ -350,16 +326,12 @@
                     <div class="monitor-section">
                         <div class="section-heading">
                             <h2>Session <span>Information</span></h2>
-                            <div class="section-caption">02 / SESSION</div>
+                            <div class="section-caption">02 / SESSION APPLICATION</div>
                         </div>
                         <div class="system-info">
                             <div class="system-info-row">
-                                <span>APPLICATION</span>
-                                <strong>QWEN NEXUS</strong>
-                            </div>
-                            <div class="system-info-row">
-                                <span>BUILD</span>
-                                <strong>02.00</strong>
+                                <span>QWEN NEXUS BUILD</span>
+                                <strong>03.00</strong>
                             </div>
                             <div class="system-info-row">
                                 <span>SESSION MODE</span>
@@ -384,32 +356,31 @@
                             <div class="system-info-row">
                                 <span>CPU CORES</span>
                                 <strong id="deviceCores">N/A</strong>
-                            </div>
+                            <span class="resource-note">
+                                <span class="resource-note-icon">ⓘ</span>
+                                <div>
+                                    <strong>Resource Limitation</strong>
+                                    <p>Browser websites cannot reliably read exact device RAM usage or hardware utilization. Values not exposed by the browser are intentionally not fabricated.</p>
+                                </div>
+                            </span>
                         </div>
                     </div>
-
-                    <div class="resource-note">
-                        <div class="resource-note-icon">ⓘ</div>
-                        <div>
-                            <strong>Resource information</strong>
-                            <p>Browser websites cannot reliably read exact device RAM usage or hardware utilization. Values not exposed by the browser are intentionally not fabricated.</p>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </div>
 
-            <!-- Footer -->
             <footer class="app-footer">
-                <div class="footer-brand">QWEN NEXUS • OPEN ACCESS</div>
-                <div class="footer-meta">PERSONAL AI COMMAND WORKSPACE</div>
+                <div class="footer-brand">
+                    <span>◈</span>
+                    QWEN NEXUS • OPEN ACCESS
+                </div>
+                <div class="footer-meta">
+                    PERSONAL AI COMMAND WORKSPACE
+                </div>
             </footer>
         </main>
     </div>
 
-    <!-- Toast Container -->
-    <div id="toast" class="toast"></div>
-
-    <!-- Load JavaScript -->
+    <div class="toast-container" id="toast"></div>
     <script src="app.js"></script>
 </body>
 </html>
